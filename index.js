@@ -1,8 +1,8 @@
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
 
-var dotenv = require('dotenv').config();
-dotenv.load();
+require('dotenv').config();
+
 const uri = process.env.MONGODB_URI;
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 
@@ -21,9 +21,14 @@ async function run() {
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
+  }
+  catch(e){
+    console.log(e);
+  } 
+  finally {
     // Ensures that the client will close when you finish/error
     await client.close();
   }
 }
-run().catch(console.dir);
+run();
+// run().catch(console.dir);
