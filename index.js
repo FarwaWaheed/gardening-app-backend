@@ -1,6 +1,8 @@
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
-
+const express = require('express');
+const port = 5000;
+const router = express.Router();
 require('dotenv').config();
 
 const uri = process.env.MONGODB_URI;
@@ -32,3 +34,17 @@ async function run() {
 }
 run();
 // run().catch(console.dir);
+
+
+
+const app = express();
+
+const getAPI = (req, res) => {
+    res.status(200).json({message: 'Get todos'})
+  }  
+router.route('/').get(getAPI)
+
+app.listen(port, () => {
+  console.log(`Server started on port ${port}`);
+});
+
