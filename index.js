@@ -1,13 +1,24 @@
-
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const express = require('express');
 const port = 5000;
 const router = express.Router();
+const bodyParser = require('body-parser')
+const user = require("./routes/userRoutes")
 require('dotenv').config();
+
+const app = express();
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded())
+// parse application/json
+app.use(bodyParser.json())
+
+//listening on port 5000
+app.listen(port, ()=>{
+  console.log(`Server started on port ${port}`);
+})
 
 const uri = process.env.MONGODB_URI;
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
-
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -34,17 +45,8 @@ async function run() {
 }
 run();
 // run().catch(console.dir);
+//routes
+app.use("/user",user);
 
 
-
-const app = express();
-
-const getAPI = (req, res) => {
-    res.status(200).json({message: 'Get todos'})
-  }  
-router.route('/').get(getAPI)
-
-app.listen(port, () => {
-  console.log(`Server started on port ${port}`);
-});
 
