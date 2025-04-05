@@ -61,12 +61,26 @@ const User = require('../models/user');
             });
         }
     }
-    async function updateUser(req, res){
+    async function signOut(req,res){
         try{
 
         }
         catch(e){
 
+        }
+    }
+    async function updateUser(req, res){
+        try{
+            const id = req.params.id;
+            const updatedUser = await User.findByIdAndUpdate(id, req.body);
+            return res.status(200).json({
+                message: "User updated successfully"
+            })
+        }
+        catch(e){
+            res.json({
+                message : e.message
+            })
         }
     }
 module.exports = { signIn, signUp, updateUser };

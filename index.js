@@ -4,9 +4,11 @@ const port = 3000;
 const router = express.Router();
 const bodyParser = require('body-parser')
 const user = require("./routes/userRoutes")
+const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
+app.use(cors());
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded())
 // parse application/json
