@@ -1,6 +1,6 @@
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const express = require('express');
-const port = 5000;
+const port = 3000;
 const router = express.Router();
 const bodyParser = require('body-parser')
 const user = require("./routes/userRoutes")
