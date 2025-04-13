@@ -1,10 +1,12 @@
-const mongoose = require('mongoose');
+const mongoose = require ('mongoose');
 const express = require('express');
-const port = 3000;
+const PORT = 5000;
 const router = express.Router();
 const bodyParser = require('body-parser')
 const user = require("./routes/userRoutes")
+const plant = require("./routes/plantRoutes")
 const cors = require('cors');
+
 require('dotenv').config();
 
 const app = express();
@@ -14,19 +16,21 @@ app.use(bodyParser.urlencoded())
 // parse application/json
 app.use(bodyParser.json())
 
-//listening on port 5000
-app.listen(port, ()=>{
-  console.log(`Server started on port ${port}`);
-})
 
 const uri = process.env.MONGODB_URI;
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+
 mongoose.connect(uri)
-    .then(() => console.log("Connected to MongoDB ✅"))
-    .catch(err => console.error("MongoDB connection error:", err));
-// run().catch(console.dir);
+.then(() => {
+  console.log('✅ Connected to MongoDB successfully', mongoose.connection.name);
+  app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+})
+.catch((err) => {
+  console.error('❌ Error connecting to MongoDB:', err.message);
+});
+
 //routes
 app.use("/user",user);
+app.use("/plant",plant);
 
 
 

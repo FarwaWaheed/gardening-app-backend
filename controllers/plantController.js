@@ -1,20 +1,107 @@
+const Plant = require('../models/Plant');
+
+const addPlant = async (req, res) => {
+  try {
+    const plant = new Plant(req.body);
+    await plant.save();
+    res.status(201).json({ message: 'Plant added successfully', plant });
+  } catch (error) {
+    res.status(500).json({ message: 'Error adding plant', error: error.message });
+  }
+};
+
 const getAllPlants = async (req, res) => {
-    try {
-      const { category, climate, soil, search } = req.query;
-  
-      // Build dynamic filter object
-      const filter = {};
-      if (category) filter.category = category;
-      if (climate) filter.climate = climate;
-      if (soil) filter.soil = soil;
-      if (search) filter.name = { $regex: search, $options: 'i' }; // case-insensitive match
-  
-      const plants = await Plant.find(filter);
-  
-      res.status(200).json(plants);
-    } catch (error) {
-      console.error('Error fetching plants:', error);
-      res.status(500).json({ message: 'Server error while retrieving plants' });
+  try {
+    const plants = await Plant.find();
+    res.status(200).json(plants);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching plants', error: error.message });
+  }
+};
+
+const getPlantById = async (req, res) => {
+  try {
+    const plant = await Plant.findById(req.params.id);
+    if (!plant) return res.status(404).json({ message: 'Plant not found' });
+    res.status(200).json(plant);
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving plant', error: error.message });
+  }
+};
+
+const updatePlant = async (req, res) => {
+  try {
+    const updatedPlant = await Plant.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedPlant) return res.status(404).json({ message: 'Plant not found' });
+    res.status(200).json({ message: 'Plant updated successfully', updatedPlant });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating plant', error: error.message });
+  }
+};
+
+const deletePlant = async (req, res) => {
+  try {
+    const deleted = await Plant.findByIdAndDelete(req.params.id);
+    if (!deleted) return res.status(404).json({ message: 'Plant not found' });
+    res.status(200).json({ message: 'Plant deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting plant', error: error.message });
+  }
+};
+
+const searchPlants = async (req, res) => {
+  const { query } = req.query;
+  try {
+    const plants = await Plant.find({
+      $or: [
+        { name: { $regex: query, $options: 'i' } },
+        { scientificName: { $regex: query, $options: 'i' } },
+        { category: { $regex: query, $options: 'i' } }
+      ]
+    });
+    res.status(200).json(plants);
+  } catch (error) {
+    res.status(500).json({ message: 'Error searching plants', error: error.message });
+  }
+};
+
+const getPlantsByCategory = async (req, res) => {
+  const { category } = req.params;
+
+  try {
+    const allowedCategories = ['fruit', 'vegetable', 'flower'];
+    if (!allowedCategories.includes(category.toLowerCase())) {
+      return res.status(400).json({ message: 'Invalid category' });
     }
-  };
-  
+
+    const plants = await Plant.find({ category: category.toLowerCase() });
+    res.status(200).json(plants);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching plants by category', error: error.message });
+  }
+};
+
+const suggestPlants = async (req, res) => {
+  const { climate, soil, sunlight } = req.body;
+  try {
+    const suggestions = await Plant.find({
+      climate: { $regex: climate, $options: 'i' },
+      soil: { $regex: soil, $options: 'i' },
+      sunlight: { $regex: sunlight, $options: 'i' }
+    });
+    res.status(200).json(suggestions);
+  } catch (error) {
+    res.status(500).json({ message: 'Error suggesting plants', error: error.message });
+  }
+};
+
+module.exports = {
+  addPlant,
+  getAllPlants,
+  getPlantById,
+  updatePlant,
+  deletePlant,
+  searchPlants,
+  getPlantsByCategory,
+  suggestPlants
+};
