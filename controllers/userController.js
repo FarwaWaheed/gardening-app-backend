@@ -4,7 +4,7 @@ const User = require('../models/user');
 -Add Access Token functionality(optional)
  */
 
-    async function signIn(req,res){
+    async function logIn(req,res){
         try{
             const{email, password} = req.body;
             const user = await User.findOne({email});
@@ -83,4 +83,4 @@ const User = require('../models/user');
             })
         }
     }
-module.exports = { signIn, signUp, updateUser };
+module.exports = { logIn, signUp, updateUser };

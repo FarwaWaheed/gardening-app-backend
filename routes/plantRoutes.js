@@ -17,11 +17,11 @@ const {
 
 const router = express.Router();
 
-router.post('/add', addPlant);
-router.get('/all', getAllPlants);
-router.get('/:id', getPlantById);
-router.put('/:id', updatePlant);
-router.delete('/:id', deletePlant);
+router.post('/addplant', addPlant);
+router.get('/getplants/all', getAllPlants);
+router.get('/getplant/:id', getPlantById);
+router.put('/update/:id', updatePlant);
+router.delete('/delete/:id', deletePlant);
 router.get('/search', searchPlants);
 router.get('/category/:category', getPlantsByCategory);
 router.post('/suggestions', suggestPlants);

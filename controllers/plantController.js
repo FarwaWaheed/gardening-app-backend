@@ -51,12 +51,14 @@ const deletePlant = async (req, res) => {
 
 const searchPlants = async (req, res) => {
   const { query } = req.query;
+  const pluralSafeQuery = query.replace(/s$/, ""); // basic singular conversion
+
   try {
     const plants = await Plant.find({
       $or: [
         { name: { $regex: query, $options: 'i' } },
         { scientificName: { $regex: query, $options: 'i' } },
-        { category: { $regex: query, $options: 'i' } }
+        { category: { $regex: new RegExp(`^${pluralSafeQuery}$`, 'i') } }
       ]
     });
     res.status(200).json(plants);
@@ -64,6 +66,7 @@ const searchPlants = async (req, res) => {
     res.status(500).json({ message: 'Error searching plants', error: error.message });
   }
 };
+
 
 const getPlantsByCategory = async (req, res) => {
   const { category } = req.params;
@@ -83,17 +86,27 @@ const getPlantsByCategory = async (req, res) => {
 
 const suggestPlants = async (req, res) => {
   const { climate, soil, sunlight } = req.body;
+
   try {
-    const suggestions = await Plant.find({
-      climate: { $regex: climate, $options: 'i' },
-      soil: { $regex: soil, $options: 'i' },
-      sunlight: { $regex: sunlight, $options: 'i' }
-    });
+    const query = {};
+
+    if (climate) {
+      query.climate = { $regex: climate, $options: 'i' };
+    }
+    if (soil) {
+      query.soil = { $regex: soil, $options: 'i' };
+    }
+    if (sunlight) {
+      query.sunlight = { $regex: sunlight, $options: 'i' };
+    }
+
+    const suggestions = await Plant.find(query);
     res.status(200).json(suggestions);
   } catch (error) {
     res.status(500).json({ message: 'Error suggesting plants', error: error.message });
   }
 };
+
 
 module.exports = {
   addPlant,
