@@ -1,10 +1,11 @@
 const mongoose = require ('mongoose');
 const express = require('express');
 const PORT = 5000;
-const router = express.Router();
 const bodyParser = require('body-parser')
 const user = require("./routes/userRoutes")
 const plant = require("./routes/plantRoutes")
+const garden = require("./routes/gardenRoutes")
+
 const cors = require('cors');
 
 require('dotenv').config();
@@ -31,6 +32,7 @@ mongoose.connect(uri)
 //routes
 app.use("/user",user);
 app.use("/plant",plant);
+app.use("/garden", garden);
 
 
 
