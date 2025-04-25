@@ -1,12 +1,11 @@
 const garden = require('../models/userPlants');
-const Plant = require("../models/plant");
-
+const plantModel = require('../models/plant')
 const addPlant = async (req,res) => {
     try{
         const userId = req.params.userId;
         const plantId = req.body.plantId;
 
-        const userPlant = new garden(userId ,plantId);
+        const userPlant = new garden({userId ,plantId});
         const savedPlant = await userPlant.save();
         return res.status(201).json({ message: 'Plant added successfully', savedPlant});
     }
@@ -18,8 +17,16 @@ const addPlant = async (req,res) => {
 const getAllPlants = async (req, res) => {
     try {
         const userId = req.params.userId;
-        const plants = await garden.find({userId: userId});
-        return res.status(200).json(plants);
+        const userPlants = await garden.find({userId: userId});
+        let plantArray = [];
+        userPlants.forEach(func1);
+        async function func1(userPlant) {
+            const plantId = userPlant.plantId;
+            const plant = await plantModel.findById(plantId);
+            plantArray.push(plant);
+
+        }
+        return res.status(200).json(plantArray);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching plants', error: error.message });
     }
