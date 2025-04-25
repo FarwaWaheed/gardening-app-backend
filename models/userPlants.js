@@ -12,4 +12,4 @@ const userPlants = new mongoose.Schema({
     },
 });
 
-module.exports = mongoose.models.UserPlants;
+module.exports = mongoose.models.UserPlants || mongoose.model('UserPlants', userPlants);
