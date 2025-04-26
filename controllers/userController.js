@@ -12,7 +12,8 @@ const User = require('../models/user');
                 console.log(user);
                 if(user.password === password){
                     return res.status(200).json({
-                        message: "User logged in successfully"
+                        message: "User logged in successfully",
+                        user : user,
                     })
                 }
                 else{
@@ -42,16 +43,17 @@ const User = require('../models/user');
                     message:"User already exists with this email",
                 });
             }
-            const user = new User({
+            const newUser = new User({
                 email: email,
                 name: name,
                 password: password,
                 role: role
             })
             //Saving the user in the database
-            await user.save();
+            await newUser.save();
             res.status(201).json({
-                message: "User registered successfully"
+                message: "User registered successfully",
+                user: newUser,
             })
 
         }
@@ -83,4 +85,42 @@ const User = require('../models/user');
             })
         }
     }
-module.exports = { logIn, signUp, updateUser };
+
+    async function getUserById(req, res) {
+        const { id } = req.params;
+        try {
+          const user = await User.findById(id);
+          if (!user) {
+            return res.status(404).json({ message: "User not found." });
+          }
+          res.status(200).json(user);
+        } catch (error) {
+          res.status(500).json({ message: "Error fetching user", error: error.message });
+        }
+      };
+
+      
+      async function getAllUsers(req, res){
+        try {
+          const users = await User.find();
+          res.status(200).json(users);
+        } catch (error) {
+          res.status(500).json({ message: "Error fetching users", error: error.message });
+        }
+      };
+
+      
+      async function deleteUser(req, res){
+        const { id } = req.params;
+        try {
+          const deletedUser = await User.findByIdAndDelete(id);
+          if (!deletedUser) {
+            return res.status(404).json({ message: "User not found." });
+          }
+          res.status(200).json({ message: "User deleted successfully." });
+        } catch (error) {
+          res.status(500).json({ message: "Error deleting user", error: error.message });
+        }
+      };
+      
+module.exports = { logIn, signUp, updateUser, getUserById, getAllUsers, deleteUser};
