@@ -3,17 +3,17 @@ const Plant = require('../models/Plant');
 const addPlant = async (req, res) => {
   try {
     const plant = new Plant(req.body);
-    await plant.save();
-    res.status(201).json({ message: 'Plant added successfully', plant });
+    const savedPlant = await plant.save();
+    return res.status(201).json({ message: 'Plant added successfully', savedPlant});
   } catch (error) {
-    res.status(500).json({ message: 'Error adding plant', error: error.message });
+    return res.status(500).json({ message: 'Error adding plant', error: error.message });
   }
 };
 
 const getAllPlants = async (req, res) => {
   try {
     const plants = await Plant.find();
-    res.status(200).json(plants);
+    return res.status(200).json(plants);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching plants', error: error.message });
   }
@@ -31,9 +31,12 @@ const getPlantById = async (req, res) => {
 
 const updatePlant = async (req, res) => {
   try {
-    const updatedPlant = await Plant.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!updatedPlant) return res.status(404).json({ message: 'Plant not found' });
-    res.status(200).json({ message: 'Plant updated successfully', updatedPlant });
+    const plant = await Plant.findById(req.params.id);
+    if(plant){
+      const updatedPlant = await Plant.findByIdAndUpdate(req.params.id, req.body);
+      res.status(200).json({ message: 'Plant updated successfully', updatedPlant });
+    }
+    else return res.status(404).json({ message: 'Plant not found' });
   } catch (error) {
     res.status(500).json({ message: 'Error updating plant', error: error.message });
   }

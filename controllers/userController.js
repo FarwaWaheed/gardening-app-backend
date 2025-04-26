@@ -9,7 +9,6 @@ const User = require('../models/user');
             const{email, password} = req.body;
             const user = await User.findOne({email});
             if(user){
-                console.log(user);
                 if(user.password === password){
                     return res.status(200).json({
                         message: "User logged in successfully",
@@ -18,7 +17,8 @@ const User = require('../models/user');
                 }
                 else{
                     return res.status(200).json({
-                        message: "The password is incorrect"
+                        message: "The password is incorrect",
+
                     })
                 }
             }

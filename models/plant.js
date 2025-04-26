@@ -13,4 +13,4 @@ const plantSchema = new mongoose.Schema({
   imageUrl: String,
 }, { timestamps: true });
 
-module.exports = mongoose.model('Plant', plantSchema);
+module.exports = mongoose.models.Plant || mongoose.model('Plants', plantSchema);
