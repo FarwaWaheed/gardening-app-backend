@@ -18,14 +18,16 @@ const getAllPlants = async (req, res) => {
         const userId = req.params.userId;
         const userPlants = await garden.find({userId: userId});
         if (userPlants.length === 0) {
-            return res.status(404).json({
-                message: 'The userId does not exist or has no plants!'
+            return res.status(200).json({
+                plants: [],
             });
         }
         const plantArray = await Promise.all(
             userPlants.map(userPlant => plantModel.findById(userPlant.plantId))
         );
-        return res.status(200).json(plantArray);
+        return res.status(200).json({
+            plants: plantArray,
+        });
     } catch (error) {
         res.status(500).json({ message: 'Error fetching plants', error: error.message });
     }
