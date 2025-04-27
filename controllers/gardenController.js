@@ -37,7 +37,7 @@ const getAllPlants = async (req, res) => {
 const deletePlant = async (req, res) => {
     try {
         const userId = req.params.userId;
-        const plantId = req.body.plantId;
+        const plantId = req.params.plantId;
         const deleted = await garden.findOneAndDelete({userId: userId, plantId: plantId});
         if (!deleted) return res.status(404).json({ message: 'Plant not found' });
         res.status(200).json({ message: 'Plant deleted successfully' });
