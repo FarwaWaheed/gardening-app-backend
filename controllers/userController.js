@@ -1,76 +1,55 @@
 const User = require('../models/user');
+const bcrypt = require("bcryptjs");
+const generateToken = require("../utils/generateToken");
 /*
 -Encrypt Password with bcrypt
 -Add Access Token functionality(optional)
  */
 
     async function logIn(req,res){
-        try{
-            const{email, password} = req.body;
-            const user = await User.findOne({email});
-            if(user){
-                if(user.password === password){
-                    return res.status(200).json({
-                        message: "User logged in successfully",
-                        user : user,
-                    })
-                }
-                else{
-                    return res.status(200).json({
-                        message: "The password is incorrect",
+            const { email, password } = req.body;
+            try {
+                const user = await User.findOne({ email });
+                if (!user) return res.status(404).json({ message: "User not found" });
 
-                    })
-                }
+                const isMatch = await bcrypt.compare(password, user.password);
+                if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
+
+                const token = generateToken(user._id);
+                res.json({ token, user: { id: user._id, username: user.username, email } });
+
+            } catch (err) {
+                res.status(500).json({ message: err.message });
             }
-            else{
-                return res.status(400).json({
-                    message: "Please enter correct email"
-                })
-            }
-        }
-        catch(e){
-            return res.json({
-                message: e.message
-            })
-        }
+        
     }
+    
+    
     async function signUp(req,res){
-        try{
-            const {email,name, password,role} = req.body;
-            const existingUser = await User.findOne({email});
-            if(existingUser) {
-                return res.status(409).json({
-                    message:"User already exists with this email",
-                });
-            }
+          const { username, email, password, role } = req.body;
+        try {
+            const existingUser = await User.findOne({ email });
+            if (existingUser) return res.status(400).json({ message: "Email already registered" });
+
+            const hashedPassword = await bcrypt.hash(password, 10);
+
             const newUser = new User({
-                email: email,
-                name: name,
-                password: password,
-                role: role
-            })
-            //Saving the user in the database
-            await newUser.save();
-            res.status(201).json({
-                message: "User registered successfully",
-                user: newUser,
-            })
-
-        }
-        catch (e) {
-            return res.json({
-                message: e.message
+            username,
+            email,
+            password: hashedPassword,
+            role,
             });
+            await newUser.save();
+
+            const token = generateToken(newUser._id);
+            res.status(201).json({ token, user: { id: newUser._id, username, email, role } });
+
+        } catch (err) {
+            res.status(500).json({ message: err.message });
         }
     }
-    async function signOut(req,res){
-        try{
-
-        }
-        catch(e){
-
-        }
-    }
+    
+    
     async function updateUser(req, res){
         try{
             const id = req.params.id;
