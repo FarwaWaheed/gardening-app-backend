@@ -16,7 +16,8 @@ const generateToken = require("../utils/generateToken");
                 if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
                 const token = generateToken(user._id);
-                res.json({ token, user: { id: user._id, username: user.username, email } });
+                console.log(token); 
+                res.json({ token, user: { id: user._id, name: user.name, email: user.email, role: user.role } });
 
             } catch (err) {
                 res.status(500).json({ message: err.message });
@@ -26,7 +27,7 @@ const generateToken = require("../utils/generateToken");
     
     
     async function signUp(req,res){
-          const { username, email, password, role } = req.body;
+          const { name, email, password, role } = req.body;
         try {
             const existingUser = await User.findOne({ email });
             if (existingUser) return res.status(400).json({ message: "Email already registered" });
@@ -34,7 +35,7 @@ const generateToken = require("../utils/generateToken");
             const hashedPassword = await bcrypt.hash(password, 10);
 
             const newUser = new User({
-            username,
+            name,
             email,
             password: hashedPassword,
             role,
@@ -42,7 +43,8 @@ const generateToken = require("../utils/generateToken");
             await newUser.save();
 
             const token = generateToken(newUser._id);
-            res.status(201).json({ token, user: { id: newUser._id, username, email, role } });
+            console.log(token);
+            res.status(201).json({ token, user: { id: newUser._id, name: newUser.name, email: newUser.email , role: newUser.role } });
 
         } catch (err) {
             res.status(500).json({ message: err.message });
@@ -54,14 +56,21 @@ const generateToken = require("../utils/generateToken");
         try{
             const id = req.params.id;
             const updatedUser = await User.findByIdAndUpdate(id, req.body);
+            
+            if (!updatedUser) {
+              return res.status(404).json({ message: "User not found" });
+            }
+            
             return res.status(200).json({
-                message: "User updated successfully"
+                message: "User updated successfully",
+                user: updatedUser,
             })
         }
-        catch(e){
-            res.json({
-                message : e.message
-            })
+        catch (e) {
+          res.status(500).json({
+            message: "Error updating user",
+            error: e.message,
+          });
         }
     }
 

@@ -5,6 +5,8 @@ const {
   getGroupById,
   joinGroup,
   leaveGroup,
+  deleteGroup,
+  updateGroup
 } = require("../controllers/groupController");
 const { isAuthenticated } = require("../middleware/authenticated");
 
@@ -15,5 +17,9 @@ router.get("/", getGroups);
 router.get("/:id", getGroupById);
 router.post("/:id/join", isAuthenticated, joinGroup);
 router.post("/:id/leave", isAuthenticated, leaveGroup);
+router.delete("/:id", isAuthenticated, deleteGroup);
+router.put("/:id/update", isAuthenticated, updateGroup);
+
+
 
 module.exports = router;

@@ -1,13 +1,18 @@
 const Group = require("../models/Group");
+require ("../models/user");
+
 
 //  Create a new group
 const createGroup = async (req, res) => {
   try {
+    const { members, ...groupData } = req.body;
+
     const group = new Group({
-      ...req.body,
+      ...groupData,
       createdBy: req.user.id,
-      members: [req.user.id],
+      members: members && members.length > 0 ? members : [req.user.id],
     });
+
     await group.save();
     res.status(201).json(group);
   } catch (err) {
@@ -23,7 +28,8 @@ const getGroups = async (req, res) => {
   if (tag) filter.interestTags = tag;
 
   try {
-    const groups = await Group.find(filter).populate("createdBy members", "username");
+    const groups = await Group.find(filter).populate("createdBy members", "name");
+    console.log(groups);
     res.json(groups);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -33,7 +39,8 @@ const getGroups = async (req, res) => {
 //  Get a specific group
 const getGroupById = async (req, res) => {
   try {
-    const group = await Group.findById(req.params.id).populate("createdBy members", "username");
+    const group = await Group.findById(req.params.id).populate("createdBy members", "name");
+    console.log (group);
     if (!group) return res.status(404).json({ message: "Group not found" });
     res.json(group);
   } catch (err) {
@@ -75,10 +82,55 @@ const leaveGroup = async (req, res) => {
   }
 };
 
+const deleteGroup = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // find the group first
+    const group = await Group.findById(id);
+
+    if (!group) {
+      return res.status(404).json({ message: "Group not found." });
+    }
+    await Group.findByIdAndDelete(id);
+
+    res.status(200).json({ message: "Group deleted successfully." });
+  } catch (err) {
+    res.status(500).json({ message: "Error deleting group", error: err.message });
+  }
+};
+
+
+const updateGroup = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const group = await Group.findById(id);
+
+    if (!group) {
+      return res.status(404).json({ message: "Group not found." });
+    }
+
+    // update the group with new data
+    const updatedGroup = await Group.findByIdAndUpdate(
+      id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+
+    res.status(200).json({ message: "Group updated successfully", group: updatedGroup });
+  } catch (err) {
+    res.status(500).json({ message: "Error updating group", error: err.message });
+  }
+};
+
+
 module.exports = {
   createGroup,
   getGroups,
   getGroupById,
   joinGroup,
   leaveGroup,
+  deleteGroup,
+  updateGroup,
 };
