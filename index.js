@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const user = require("./routes/userRoutes")
 const plant = require("./routes/plantRoutes")
 const garden = require("./routes/gardenRoutes")
+const group = require("./routes/groupRoutes")
 
 const cors = require('cors');
 
@@ -33,6 +34,7 @@ mongoose.connect(uri)
 app.use("/user",user);
 app.use("/plant",plant);
 app.use("/garden", garden);
+app.use("/group", group);
 
 
 
