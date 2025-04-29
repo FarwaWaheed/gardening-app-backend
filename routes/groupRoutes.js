@@ -9,6 +9,7 @@ const {
   updateGroup
 } = require("../controllers/groupController");
 const { isAuthenticated } = require("../middleware/authenticated");
+const {authorizeRoles} = require ("../middleware/roleMiddleware.js");
 
 const router = express.Router();
 
@@ -17,8 +18,20 @@ router.get("/", getGroups);
 router.get("/:id", getGroupById);
 router.post("/:id/join", isAuthenticated, joinGroup);
 router.post("/:id/leave", isAuthenticated, leaveGroup);
-router.delete("/:id", isAuthenticated, deleteGroup);
-router.put("/:id/update", isAuthenticated, updateGroup);
+
+router.delete(
+  "/:id", 
+  isAuthenticated, 
+  authorizeRoles("admin", "supervisor"),
+  deleteGroup
+);
+
+router.put(
+  "/:id/update", 
+  isAuthenticated, 
+  authorizeRoles("admin", "supervisor"),
+  updateGroup
+);
 
 
 

@@ -24,8 +24,11 @@ const createGroup = async (req, res) => {
 const getGroups = async (req, res) => {
   const { location, tag } = req.query;
   let filter = {};
-  if (location) filter.location = location;
-  if (tag) filter.interestTags = tag;
+
+  if (location && location !== "") filter.location = new RegExp(location, "i");
+  if (tag && tag !== "") filter.interestTags = new RegExp(tag, "i");
+
+  console.log("Final Filter:", filter);
 
   try {
     const groups = await Group.find(filter).populate("createdBy members", "name");
