@@ -72,6 +72,21 @@ const getAllPlantRecords = async (req, res) => {
     }
 };
 
+const getPlantRecord = async (req, res) => {
+    try {
+        const plantRecordId = req.params.recordId;
+        const record = await plantRecord.findById(plantRecordId);
+        if (!record) {
+            return res.status(404).json({message: "Plant record not found!"})
+        }
+        return res.status(200).json({
+            plantRecord: record,
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching plant record', error: error.message });
+    }
+};
+
 
 const deletePlantRecord = async (req, res) => {
     try {
@@ -87,6 +102,7 @@ const deletePlantRecord = async (req, res) => {
 module.exports = {
     addPlantRecord,
     getAllPlantRecords,
+    getPlantRecord,
     updatePlantRecord,
     deletePlantRecord,
 }
