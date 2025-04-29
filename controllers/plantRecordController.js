@@ -4,7 +4,8 @@ const addPlantRecord = async (req,res) => {
     try{
         const userId = req.params.userId;
         const plantId = req.params.plantId;
-        const { height, observationNote, imageUrl } = req.body;
+        const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+        const { height, observationNote} = req.body;
         if(!height){
             return res.status(200).json({message: "Please enter height of plant"});
 
@@ -32,7 +33,8 @@ const updatePlantRecord = async (req,res) => {
     try{
         const userId = req.params.userId;
         const plantId = req.params.plantId;
-        const { height, observationNote, imageUrl } = req.body;
+        const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+        const { height, observationNote} = req.body;
         if(!height){
             return res.status.json({message: "Please enter height of plant"});
 
