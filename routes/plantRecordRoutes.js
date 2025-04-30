@@ -11,9 +11,9 @@ const {
 const router = express.Router();
 
 router.post('/addPlantRecord/:userId/:plantId', upload.single('image'), addPlantRecord);
-router.get('/getPlantRecords/all/:userId/:plantId',upload.single('image'), getAllPlantRecords);
-router.get('/getPlantRecord/all/:recordId', getPlantRecord);
-router.put('/updatePlantRecords/:userId/:plantId', updatePlantRecord);
+router.get('/getPlantRecords/all/:userId/:plantId', getAllPlantRecords);
+router.get('/getPlantRecord/:recordId', getPlantRecord);
+router.put('/updatePlantRecord/:userId/:plantId',upload.single('image'), updatePlantRecord);
 router.delete('/deletePlantRecord/:userId/:plantId', deletePlantRecord);
 
 module.exports = router
