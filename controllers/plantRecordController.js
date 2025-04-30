@@ -21,8 +21,8 @@ const addPlantRecord = async (req,res) => {
             observationNote,
             imageUrl,
         });
-        const savedPlant = await plantDetail.save();
-        return res.status(201).json({ message: 'Plant record created successfully', savedPlant});
+        const data = await plantDetail.save();
+        return res.status(201).json({ message: 'Plant record created successfully', record: data});
     }
     catch (error) {
         return res.status(500).json({ message: 'Error adding plant record', error: error.message });
