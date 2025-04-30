@@ -7,6 +7,7 @@ const plant = require("./routes/plantRoutes")
 const garden = require("./routes/gardenRoutes")
 const group = require("./routes/groupRoutes")
 const plantRecords = require("./routes/plantRecordRoutes")
+const reminders = require("./routes/reminderRoutes")
 
 const cors = require('cors');
 
@@ -32,7 +33,7 @@ mongoose.connect(uri)
 });
 
 //routes
-app.use("/user",user);
+app.use("/user",user, reminders);
 app.use("/plant",plant,plantRecords);
 app.use("/garden", garden);
 app.use("/group", group);
