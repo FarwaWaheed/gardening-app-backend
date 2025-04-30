@@ -7,11 +7,11 @@ const addPlantRecord = async (req,res) => {
         const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
         const { height, observationNote} = req.body;
         if(!height){
-            return res.status(200).json({message: "Please enter height of plant"});
+            return res.status(400).json({message: "Please enter height of plant"});
 
         }
         if(!observationNote){
-            return res.status(200).json({message: "Please enter observations about plant"});
+            return res.status(400).json({message: "Please enter observations about plant"});
 
         }
         const plantDetail = new plantRecord({
