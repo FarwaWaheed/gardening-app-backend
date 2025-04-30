@@ -6,6 +6,7 @@ const user = require("./routes/userRoutes")
 const plant = require("./routes/plantRoutes")
 const garden = require("./routes/gardenRoutes")
 const group = require("./routes/groupRoutes")
+const plantRecords = require("./routes/plantRecordRoutes")
 
 const cors = require('cors');
 
@@ -17,7 +18,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded())
 // parse application/json
 app.use(bodyParser.json())
-
+app.use('/uploads', express.static('uploads'));
 
 const uri = process.env.MONGODB_URI;
 
@@ -32,7 +33,7 @@ mongoose.connect(uri)
 
 //routes
 app.use("/user",user);
-app.use("/plant",plant);
+app.use("/plant",plant,plantRecords);
 app.use("/garden", garden);
 app.use("/group", group);
 
