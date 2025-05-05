@@ -7,9 +7,9 @@ const {
     deleteReminder
 } = require('../controllers/reminderController')
 
-router.post('/:userId/:plantId', addReminder);
-router.get('/:userId', getReminders);
-router.put('/complete/:id',updateReminder);
-router.delete('/:id', deleteReminder);
+router.post('/addReminder/:userId/:plantId', addReminder);
+router.get('/getReminders/:userId', getReminders);
+router.put('/updateReminder/:id',updateReminder);
+router.delete('/deleteReminder/:id', deleteReminder);
 
 module.exports = router;

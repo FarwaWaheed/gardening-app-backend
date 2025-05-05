@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-
 const reminderSchema = new mongoose.Schema({
     userId: {
         type: Schema.Types.ObjectId,

@@ -15,7 +15,7 @@ const addReminder = async (req, res) => {
             notes
         });
         await reminder.save();
-        res.status(201).json({ message: 'Reminder created', reminder });
+        res.status(201).json({ message: 'Reminder created', data: reminder });
     } catch (err) {
         res.status(500).json({ message: 'Error creating reminder', error: err.message });
     }
@@ -24,8 +24,8 @@ const addReminder = async (req, res) => {
 // Get reminders for a user
 const getReminders = async (req, res) => {
     try {
-        const reminders = await Reminder.find({ userId: req.params.userId }).populate('plantId');
-        res.json({ reminders });
+        const reminders = await Reminder.find({ userId: req.params.userId }).populate('plantId', null, 'Plants');
+        res.json({ data: reminders });
     } catch (err) {
         res.status(500).json({ message: 'Error fetching reminders', error: err.message });
     }
@@ -35,7 +35,7 @@ const getReminders = async (req, res) => {
 const updateReminder =  async (req, res) => {
     try {
         const reminder = await Reminder.findByIdAndUpdate(req.params.id, { isCompleted: true }, { new: true });
-        res.json({ message: 'Reminder marked as complete', reminder });
+        res.json({ message: 'Reminder marked as complete', data: reminder });
     } catch (err) {
         res.status(500).json({ message: 'Error updating reminder', error: err.message });
     }
