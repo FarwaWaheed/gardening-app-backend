@@ -8,6 +8,8 @@ const garden = require("./routes/gardenRoutes")
 const group = require("./routes/groupRoutes")
 const plantRecords = require("./routes/plantRecordRoutes")
 const reminders = require("./routes/reminderRoutes")
+const notifications = require ("./routes/notificationRoutes")
+const path = require('path');
 
 const cors = require('cors');
 
@@ -19,7 +21,9 @@ app.use(cors());
 app.use(bodyParser.urlencoded())
 // parse application/json
 app.use(bodyParser.json())
-app.use('/uploads', express.static('uploads'));
+// app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 const uri = process.env.MONGODB_URI;
 
@@ -37,6 +41,7 @@ app.use("/user",user, reminders);
 app.use("/plant",plant,plantRecords);
 app.use("/garden", garden);
 app.use("/group", group);
+app.use ("/notification", notifications);
 
 
 

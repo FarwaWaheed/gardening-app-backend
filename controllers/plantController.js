@@ -45,6 +45,7 @@ const updatePlant = async (req, res) => {
 const deletePlant = async (req, res) => {
   try {
     const deleted = await Plant.findByIdAndDelete(req.params.id);
+    console.log(deleted);
     if (!deleted) return res.status(404).json({ message: 'Plant not found' });
     res.status(200).json({ message: 'Plant deleted successfully' });
   } catch (error) {
