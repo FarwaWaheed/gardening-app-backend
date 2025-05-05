@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded())
 // parse application/json
 app.use(bodyParser.json())
 // app.use('/uploads', express.static('uploads'));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static('uploads'));
 
 
 const uri = process.env.MONGODB_URI;
