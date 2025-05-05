@@ -1,4 +1,4 @@
-const Plant = require('../models/Plant');
+const Plant = require('../models/plant');
 
 const addPlant = async (req, res) => {
   try {

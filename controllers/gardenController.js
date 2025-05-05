@@ -1,5 +1,5 @@
 const garden = require('../models/userPlants');
-const plantModel = require('../models/Plant')
+const plantModel = require('../models/plant')
 const addPlant = async (req,res) => {
     try{
         const userId = req.params.userId;

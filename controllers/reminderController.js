@@ -1,5 +1,5 @@
 const express = require('express');
-const Reminder = require('../models/Reminder');
+const Reminder = require('../models/reminder');
 
 // Create a new reminder
 const addReminder = async (req, res) => {
