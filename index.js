@@ -1,6 +1,6 @@
 const mongoose = require ('mongoose');
 const express = require('express');
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 const bodyParser = require('body-parser')
 const user = require("./routes/userRoutes")
 const plant = require("./routes/plantRoutes")
